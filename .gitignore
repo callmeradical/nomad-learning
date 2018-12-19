@@ -10,3 +10,6 @@
 
 # Vagrant files 
 .vagrant
+*.js
+*.d.ts
+node_modules
