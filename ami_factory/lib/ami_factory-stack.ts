@@ -1,9 +1,11 @@
 import cdk = require('@aws-cdk/cdk');
 import codepipeline = require('@aws-cdk/aws-codepipeline')
+import iam = require('@aws-cdk/aws-iam')
 
 import { GitHubSourceAction, ManualApprovalAction } from '@aws-cdk/aws-codepipeline';
 import { SecretParameter } from '@aws-cdk/cdk';
 import { PipelineProject, PipelineBuildAction } from '@aws-cdk/aws-codebuild';
+import { ServicePrincipal } from '@aws-cdk/aws-iam';
 
 
 export class AmiFactoryStack extends cdk.Stack {
@@ -36,9 +38,18 @@ export class AmiFactoryStack extends cdk.Stack {
       oauthToken: oauth.value,
       outputArtifactName: "sourcecode"
     });
+
+    const role = new iam.Role(this, 'CDKTestRole', {
+      assumedBy: new ServicePrincipal('codebuild.amazonaws.com'),
+    });
+
+    role.attachManagedPolicy("arn:aws:iam::721706031312:policy/service-role/codebuild-policy")
     
     // Adding in CodeBuild for Build Action
-    const project = new PipelineProject(this, 'CDKTestProject');
+    const project = new PipelineProject(this, 'CDKTestProject', {
+      role: role,
+    });
+  
 
     const buildStage = pipeline.addStage('Build');
     new PipelineBuildAction(this, 'CodeBuild', {
