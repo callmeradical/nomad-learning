@@ -43,7 +43,13 @@
         "type": "shell",
         "inline": [
             "sudo apt-get update",
-            "sudo apt-get install -y curl"
+            "sudo apt-get install -y unzip curl",
+            "wget https://releases.hashicorp.com/consul/1.4.0/consul_1.4.0_linux_amd64.zip -o consul.zip",
+            "unzip consul.zip",
+            "sudo install consul /usr/bin/consul",
+            "wget https://releases.hashicorp.com/nomad/0.8.6/nomad_0.8.6_linux_amd64.zip -o nomad.zip",
+            "unzip nomad.zip",
+            "sudo install nomad /usr/bin/nomad"
         ]
     }, 
     {
